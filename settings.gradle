@@ -1,0 +1,14 @@
+rootProject.name = 'cargotracker'
+include 'module'
+include 'module:booking'
+findProject(':module:booking')?.name = 'booking'
+include 'module:handling'
+findProject(':module:handling')?.name = 'handling'
+include 'module:routing'
+findProject(':module:routing')?.name = 'routing'
+include 'module:shared'
+findProject(':module:shared')?.name = 'shared'
+include 'module:tracking'
+findProject(':module:tracking')?.name = 'tracking'
+
+

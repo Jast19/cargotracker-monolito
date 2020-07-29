@@ -1,0 +1,49 @@
+apply plugin: 'war'
+apply plugin: 'liberty'
+
+group 'co.jast.monolito'
+version '1.0.0'
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.0'
+    }
+}
+
+ext  {
+    liberty.server.var.'default.http.port' = '8080'
+    liberty.server.var.'default.https.port' = '9443'
+    liberty.server.var.'app.context.root' = project.name
+}
+
+dependencies {
+    compile project("module:booking")
+    compile project("module:handling")
+    compile project("module:routing")
+    compile project("module:shared")
+    compile project("module:tracking")
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compileOnly group: 'javax', name: 'javaee-api', version: '8.0.1'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
+}
+
+task openBrowser {
+    description = 'Open browser to the running application'
+    doLast {
+        String port = liberty.server.var.'default.http.port'
+        String context = liberty.server.var.'app.context.root'
+        String URL = "http://localhost:" + port + "/" + context + "/" + "servlet"
+        java.awt.Desktop.desktop.browse URL.toURI()
+        java.awt.Desktop.desktop.browse file("$buildDir/reports/tests/test/index.html").toURI()
+    }
+}
